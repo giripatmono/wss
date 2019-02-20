@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gorilla/websocket"
+	verifier "github.com/okta/okta-jwt-verifier-golang"
 	"log"
 	"net/http"
 	"os"
@@ -58,24 +59,24 @@ func main() {
 func isAuthenticated(token *string) bool {
 	fmt.Println("authenticating...")
 	fmt.Println(*token)
-	//bearerToken := *token
+	bearerToken := *token
 
-	//tv := map[string]string{}
-	//tv["aud"] = "api://default"
-	//tv["cid"] = os.Getenv("SPA_CLIENT_ID")
-	//jv := verifier.JwtVerifier{
-	//	Issuer:           os.Getenv("ISSUER"),
-	//	ClaimsToValidate: tv,
-	//}
-	//
-	//a, err := jv.New().VerifyAccessToken(bearerToken)
-	//
-	//fmt.Println("isAuth...")
-	//fmt.Println(a)
-	//fmt.Println(err)
-	//if err != nil {
-	//	return false
-	//}
+	tv := map[string]string{}
+	tv["aud"] = "api://default"
+	tv["cid"] = os.Getenv("SPA_CLIENT_ID")
+	jv := verifier.JwtVerifier{
+		Issuer:           os.Getenv("ISSUER"),
+		ClaimsToValidate: tv,
+	}
+
+	a, err := jv.New().VerifyAccessToken(bearerToken)
+
+	fmt.Println("isAuth...")
+	fmt.Println(a)
+	fmt.Println(err)
+	if err != nil {
+		return false
+	}
 
 	return true
 }
